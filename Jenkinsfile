@@ -1,9 +1,16 @@
-steps {
-  script {
-    if (isUnix()) {
-      sh 'echo Unix-compatible'
-    } else {
-      bat 'echo Windows-compatible'
+pipeline {
+  agent any
+
+  stages {
+    stage('Checkout') {
+      steps {
+        git url: 'https://github.com/tejanayak/sample.git', branch: 'main'
+      }
+    }
+    stage('Run Python') {
+      steps {
+        bat 'hello.py'
+      }
     }
   }
 }
