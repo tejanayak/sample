@@ -1,15 +1,9 @@
-pipeline {
-  agent any
-  stages {
-    stage('version') {
-      steps {
-        bat 'python3 --version'
-      }
-    }
-    stage('hello') {
-      steps {
-        bat 'pythong hello.py'
-      }
+steps {
+  script {
+    if (isUnix()) {
+      sh 'echo Unix-compatible'
+    } else {
+      bat 'echo Windows-compatible'
     }
   }
 }
