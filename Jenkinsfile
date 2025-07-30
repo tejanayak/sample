@@ -18,8 +18,8 @@ pipeline {
     stage('Setup Database') {
       steps {
         bat """
-          mysql -h %DB_HOST% --port=%DB_PORT% -u %DB_USER% -p%DB_PASSWORD% -e "DROP DATABASE IF EXISTS \\"%DB_NAME%\\";"
-          mysql -h %DB_HOST% --port=%DB_PORT% -u %DB_USER% -p%DB_PASSWORD% -e "CREATE DATABASE \\"%DB_NAME%\\";"
+          mysql -h %DB_HOST% --port=%DB_PORT% -u %DB_USER% -p%DB_PASSWORD% -e "DROP DATABASE IF EXISTS \\'%DB_NAME%\\';"
+          mysql -h %DB_HOST% --port=%DB_PORT% -u %DB_USER% -p%DB_PASSWORD% -e "CREATE DATABASE \\'%DB_NAME%\\';"
         """
         bat 'npm run migrate'
       }
@@ -38,7 +38,7 @@ pipeline {
   post {
     always {
       bat """
-        mysql -h %DB_HOST% --port=%DB_PORT% -u %DB_USER% -p%DB_PASSWORD% -e "DROP DATABASE IF EXISTS \\"%DB_NAME%\\";"
+        mysql -h %DB_HOST% --port=%DB_PORT% -u %DB_USER% -p%DB_PASSWORD% -e "DROP DATABASE IF EXISTS \\'%DB_NAME%\\';"
       """
     }
     success {
