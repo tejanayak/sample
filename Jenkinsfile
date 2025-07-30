@@ -2,11 +2,12 @@ pipeline {
   agent any
   environment {
     DB_HOST     = 'localhost'
-    DB_PORT     = '5432'
+    DB_PORT     = '3306'
     DB_NAME     = 'test_db'
-    DB_USER     = 'postgres'
-    DB_PASSWORD = 'your_postgres_password'
-    PATH        = "${env.PATH};C:\\Program Files\\PostgreSQL\\14\\bin" // adjust version
+    DB_USER     = 'root'
+    DB_PASSWORD = 'your_mysql_password'
+    // Optionally add MySQL bin directory if needed:
+    PATH        = "${env.PATH};C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin"
   }
   stages {
     stage('Checkout') {
@@ -17,9 +18,8 @@ pipeline {
     stage('Setup Database') {
       steps {
         bat """
-          set PGPASSWORD=%DB_PASSWORD%
-          psql -h %DB_HOST% -p %DB_PORT% -U %DB_USER% -c "DROP DATABASE IF EXISTS %DB_NAME%;"
-          psql -h %DB_HOST% -p %DB_PORT% -U %DB_USER% -c "CREATE DATABASE %DB_NAME%;"
+          mysql -h %DB_HOST% --port=%DB_PORT% -u %DB_USER% -p%DB_PASSWORD% -e "DROP DATABASE IF EXISTS \\"%DB_NAME%\\";"
+          mysql -h %DB_HOST% --port=%DB_PORT% -u %DB_USER% -p%DB_PASSWORD% -e "CREATE DATABASE \\"%DB_NAME%\\";"
         """
         bat 'npm run migrate'
       }
@@ -38,8 +38,7 @@ pipeline {
   post {
     always {
       bat """
-        set PGPASSWORD=%DB_PASSWORD%
-        psql -h %DB_HOST% -p %DB_PORT% -U %DB_USER% -c "DROP DATABASE IF EXISTS %DB_NAME%;"
+        mysql -h %DB_HOST% --port=%DB_PORT% -u %DB_USER% -p%DB_PASSWORD% -e "DROP DATABASE IF EXISTS \\"%DB_NAME%\\";"
       """
     }
     success {
