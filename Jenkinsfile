@@ -5,7 +5,7 @@ pipeline {
     DB_PORT     = '3306'
     DB_NAME     = 'test_db'
     DB_USER     = 'root'
-    DB_PASSWORD = 'your_mysql_password'
+    DB_PASSWORD = '*Number1'
     // Optionally add MySQL bin directory if needed:
     PATH        = "${env.PATH};C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin"
   }
