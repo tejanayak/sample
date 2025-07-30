@@ -1,7 +1,7 @@
 pipeline {
   agent any
   environment {
-    DB_HOST     = 'localhost'
+    DB_HOST     = '127.0.0.1'
     DB_PORT     = '3306'
     DB_NAME     = 'test_db'
     DB_USER     = 'root'
