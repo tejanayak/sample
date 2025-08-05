@@ -9,7 +9,8 @@ pipeline {
     }
     stage('Run Python') {
       steps {
-        bat 'hello.py'
+        // bat 'hello.py'
+        bat 'api.py'
       }
     }
   }
