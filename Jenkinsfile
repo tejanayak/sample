@@ -1,15 +1,9 @@
 pipeline {
     agent any
-    triggers {
-        githubPullRequest(
-            triggerOn: 'pr',
-            branchFilter: '.*'
-        )
-    }
     stages {
         stage('Checkout') {
             steps {
-                git url: 'https://github.com/tejanayak/sample.git', branch: '${ghprbSourceBranch}'
+                git url: 'https://github.com/tejanayak/sample.git', branch: 'main'
             }
         }
         stage('Setup Environment') {
@@ -18,18 +12,7 @@ pipeline {
                     python -m venv venv
                     call venv\\Scripts\\activate
                     pip install --upgrade pip
-                    pip install flask mysql-connector-python requests pytest
-                '''
-            }
-        }
-        stage('Run Integration Tests') {
-            steps {
-                bat '''
-                    call venv\\Scripts\\activate
-                    start /B python api.py
-                    ping 127.0.0.1 -n 6 > nul
-                    pytest tests/test_api.py --verbose
-                    taskkill /IM python.exe /F
+                    pip install flask mysql-connector-python
                 '''
             }
         }

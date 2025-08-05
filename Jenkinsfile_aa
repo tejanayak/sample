@@ -1,0 +1,57 @@
+```groovy
+pipeline {
+    agent any
+    triggers {
+        pollSCM('') // Enables webhook-based triggering
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    // Checkout the PR branch or main branch
+                    def branch = env.CHANGE_BRANCH ?: 'main'
+                    git url: 'https://github.com/tejanayak/sample.git', branch: branch
+                }
+            }
+        }
+        stage('Setup Environment') {
+            steps {
+                bat '''
+                    python -m venv venv
+                    call venv\\Scripts\\activate
+                    pip install --upgrade pip
+                    pip install flask mysql-connector-python requests pytest
+                '''
+            }
+        }
+        stage('Run Integration Tests') {
+            steps {
+                bat '''
+                    call venv\\Scripts\\activate
+                    start /B python api.py
+                    ping 127.0.0.1 -n 6 > nul
+                    pytest tests/test_api.py --verbose
+                    taskkill /IM python.exe /F
+                '''
+            }
+        }
+        stage('Run Python') {
+            steps {
+                bat '''
+                    call venv\\Scripts\\activate
+                    python api.py
+                '''
+            }
+        }
+    }
+    post {
+        always {
+            bat '''
+                if exist venv (
+                    rmdir /s /q venv
+                )
+            '''
+        }
+    }
+}
+```
